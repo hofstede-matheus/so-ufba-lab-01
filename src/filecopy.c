@@ -5,15 +5,13 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "errors.h"
+
 #define EXPECTED_ARGUMENTS 3 /* program name + 2 arguments */
 
-void errorNoSuchAFileOrDirectory(char * filename) {
-    printf("filecopy: não foi possível abrir o arquivo %s: Arquivo ou diretório não existe. \n", filename);
-    exit(EXIT_FAILURE);
-}
 
-int main( int argc, const char ** argv ) {
-    char buf;
+int main( int argc, char ** argv ) {
+    char buffer;
     int sourcefile, destfile, n;
 
     if (argc == EXPECTED_ARGUMENTS) {
@@ -26,10 +24,9 @@ int main( int argc, const char ** argv ) {
         }
 
     } else {
-        printf("Número de argumentos inválidos \n");
-        exit (EXIT_FAILURE);
+        errorInvalidArgumentsNumber();
     }
 
-   return 0;
+   return EXIT_SUCCESS;
 }
 
