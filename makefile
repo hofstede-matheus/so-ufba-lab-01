@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS = -Wall -g
+CFLAGS = -std=c99 -Wall
 
 filecopy: src/filecopy.c
 	$(CC) $(CFLAGS) src/filecopy.c -o build/filecopy
