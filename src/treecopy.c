@@ -114,15 +114,15 @@ void copyDirectory(char *sourcePath , const char *destinationPath ) {
 
         if ( strcmp(dptr->d_name, ".") && strcmp(dptr->d_name, "..") ) {
             char * currentPath = concatString(rootSource, dptr->d_name);
-
+            printf("%s\n", dptr->d_name);
             switch (checkIfFileOrDirectory(currentPath))
             {
             case TYPE_DIRECTORY:
-                printf("IS DIR");
+                printf("IS DIR\n");
                 copyDirectory(currentPath, concatString(rootDestination, dptr->d_name));
                 break;
             case TYPE_FILE:
-                printf("IS FILE");
+                printf("IS FILE\n");
 
                 sourceFile = open(currentPath, O_RDONLY, 0);
                 destFile = open(concatString(rootDestination, dptr->d_name), O_CREAT | O_WRONLY , 0755);
