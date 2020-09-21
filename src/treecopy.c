@@ -115,12 +115,13 @@ void copyDirectory(char *sourcePath , const char *destinationPath ) {
         if ( strcmp(dptr->d_name, ".") && strcmp(dptr->d_name, "..") ) {
             char * currentPath = concatString(rootSource, dptr->d_name);
             printf("%s\n", dptr->d_name);
-            switch (checkIfFileOrDirectory(currentPath))
-            {
+
+            switch (checkIfFileOrDirectory(currentPath)){
             case TYPE_DIRECTORY:
                 printf("IS DIR\n");
                 copyDirectory(currentPath, concatString(rootDestination, dptr->d_name));
                 break;
+                
             case TYPE_FILE:
                 printf("IS FILE\n");
 
@@ -156,13 +157,7 @@ void copyDirectory(char *sourcePath , const char *destinationPath ) {
         }
 
         free(rootSource);
-
-
-
-
-            
-
-            
+     
     }
 
     
@@ -188,9 +183,7 @@ int main( int argc, char ** argv ) {
             printf("%d", checkIfFileOrDirectory(dptr->d_name));
             printf(" [%s] \n",dptr->d_name);
         } */
-
-        
-       
+               
        printf("OK \n");
     } else {
         errorInvalidArgumentsNumberTreeCopy();        

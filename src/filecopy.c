@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <errno.h>
 #include "errors.h"
 
 #define EXPECTED_ARGUMENTS 3 /* program name + 2 arguments */
@@ -15,7 +16,24 @@ void copyFile(char *src_Path , char *dst_Path){
     unsigned char buffer[4096];
 
     src_File = open(src_Path, O_RDONLY);
+    if (src_File == 0 ) {
+        switch (errno) {
+            case EACCES:    /* Permission denied (POSIX.1) */ 
+                errorPermission();
+                break;
+            case ENOENT:    /* No such file or directory (POSIX.1)  */
+                errorFolderDoesNotExists();
+                break;
+            case ENOMEM:    /* Not enough space (POSIX.1)  */
+                errorMemory();
+                break;
+            default:    /* Não conseguiu ler o diretorio */
+                errorCouldNotReadFolder();
+                break;
+        }
+    }
     dst_File = open(dst_Path, O_CREAT | O_WRONLY);
+    // errorCheck(dst_File);
     
     if(src_File == -1){
         errorNoSuchAFileOrDirectory(src_Path);
