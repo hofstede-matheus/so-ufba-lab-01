@@ -15,7 +15,7 @@ void copyFile(char *src_Path , char *dst_Path){
     int src_File, dst_File, n, endOfFile;
     unsigned char buffer[4096];
 
-    src_File = open(src_Path, O_RDONLY);
+    src_File = open(src_Path, O_RDONLY, 0);
     if (src_File == 0 ) {
         switch (errno) {
             case EACCES:    /* Permission denied (POSIX.1) */ 
@@ -32,7 +32,7 @@ void copyFile(char *src_Path , char *dst_Path){
                 break;
         }
     }
-    dst_File = open(dst_Path, O_CREAT | O_WRONLY);
+    dst_File = open(dst_Path, O_CREAT | O_WRONLY, 0755);
     // errorCheck(dst_File);
     
     if(src_File == -1){
