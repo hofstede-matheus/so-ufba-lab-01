@@ -126,6 +126,18 @@ void copyDirectory(char *sourcePath , const char *destinationPath ) {
                     } 
 
                     while ((size = read(sourceFile, buf, BUFFER_SIZE)) > 0) {
+                        if (size == -1) {
+                            switch (errno) {
+                            case EBADF:
+                                errorFileNotOpened();
+                                break;
+                            case EFAULT:
+                                errorSegFault();
+                                break;
+                            case EISDIR:
+                                errorIsDir();
+                            }
+                        }
                         write(destFile, buf, size);
                     }
 

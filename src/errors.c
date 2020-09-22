@@ -72,3 +72,18 @@ void errorCouldNotCreateFolder() {
     printf("treecopy: O diretório não pôde ser criado! \n");
     exit(EXIT_FAILURE);
 }
+
+void errorFileNotOpened() {
+    printf("treecopy: O arquivo não foi aberto! \n");
+    exit(EXIT_FAILURE);
+}
+
+void errorSegFault() {
+    printf("treecopy: O endereço de memória não está acessível! \n");
+    exit(EXIT_FAILURE);
+}
+
+void errorIsDir() {
+    printf("treecopy: fd é um diretório! \n");
+    exit(EXIT_FAILURE);
+}

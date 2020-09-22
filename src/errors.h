@@ -14,5 +14,8 @@ void errorNotAFolder();
 void errorCouldNotReadFolder();
 void errorFolderAlreadyExists();
 void errorCouldNotCreateFolder();
+void errorFileNotOpened();
+void errorSegFault();
+void errorIsDir();
 
 #endif
