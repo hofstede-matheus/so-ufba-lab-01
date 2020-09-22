@@ -8,7 +8,6 @@ endef
 filecopy: src/filecopy.c src/errors.o src/errors.h
 	mkdir -p build
 	$(CC) $(CFLAGS) src/filecopy.c src/errors.o -o build/filecopy
-	$(clean)
 
 treecopy: src/treecopy.c src/errors.o src/errors.h
 	mkdir -p build

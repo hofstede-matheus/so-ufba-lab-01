@@ -9,7 +9,7 @@
 #include "errors.h"
 
 #define EXPECTED_ARGUMENTS 3 /* program name + 2 arguments */
-#define BUFFER_SIZE 4096 /* buffer 4MB */
+#define BUFFER_SIZE 4096 /* buffer 4KB */
 
 void copyFile(char *src_Path , char *dst_Path){
     int src_File, dst_File, n, endOfFile;
@@ -33,11 +33,6 @@ void copyFile(char *src_Path , char *dst_Path){
         }
     }
     dst_File = open(dst_Path, O_CREAT | O_WRONLY, 0755);
-    // errorCheck(dst_File);
-    
-    if(src_File == -1){
-        errorNoSuchAFileOrDirectory(src_Path);
-    }
 
     while(1){
         endOfFile = read(src_File, buffer, BUFFER_SIZE);
