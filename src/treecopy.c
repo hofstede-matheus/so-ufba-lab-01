@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
 #include <string.h>
 
+#include <sys/types.h>
 #include <sys/stat.h>
 
+#include <fcntl.h>
 #include <errno.h>
-
 #include <dirent.h>
 
 #include "errors.h"
@@ -22,21 +21,14 @@
 
 int checkIfFileOrDirectory(const char *path) {
     struct stat path_stat;
-
     stat(path, &path_stat);
-
-    /* printf("DIR: %d\n", S_ISDIR(path_stat.st_mode));
-    printf("FILE: %d\n", S_ISREG(path_stat.st_mode)); */
-
 
     if( S_ISDIR(path_stat.st_mode) ) return 0;
     else if ( S_ISREG(path_stat.st_mode) != 0 ) return 1;
     else return -1;
-
 }
 
-char * concatString(const char *str1, const char *str2)
-{   
+char * concatString(const char *str1, const char *str2) {   
     size_t s1, s2, s3, i = 0;
     char *a;
 
@@ -56,8 +48,7 @@ char * concatString(const char *str1, const char *str2)
         i++;
     }
 
-    a[i] = '\0';                    // Here i = s1 + s2
-
+    a[i] = '\0';
     return a;
 }
 
@@ -111,80 +102,51 @@ void copyDirectory(char *sourcePath , const char *destinationPath ) {
         int sourceFile, destFile;
         size_t size;
 
-
         if ( strcmp(dptr->d_name, ".") && strcmp(dptr->d_name, "..") ) {
             char * currentPath = concatString(rootSource, dptr->d_name);
-            printf("%s\n", dptr->d_name);
 
-            switch (checkIfFileOrDirectory(currentPath)){
-            case TYPE_DIRECTORY:
-                printf("IS DIR\n");
-                copyDirectory(currentPath, concatString(rootDestination, dptr->d_name));
-                break;
+            switch (checkIfFileOrDirectory(currentPath)) {
+
+                case TYPE_DIRECTORY:
+                    copyDirectory(currentPath, concatString(rootDestination, dptr->d_name));
+                    break;
+                    
+                case TYPE_FILE:
+                    sourceFile = open(currentPath, O_RDONLY, 0);
+                    destFile = open(concatString(rootDestination, dptr->d_name), O_CREAT | O_WRONLY , 0755);
+
+                    if(sourceFile < 0) {
+                        if(errno == EACCES);
+                        else errorCouldNotReadFile();
+                    }
+
+                    if(destFile < 0) {
+                        if(errno == EACCES);
+                        else errorCouldNotWriteFile();
+                    } 
+
+                    while ((size = read(sourceFile, buf, BUFFER_SIZE)) > 0) {
+                        write(destFile, buf, size);
+                    }
+
+                    close(sourceFile);
+                    close(destFile);
+                    break;
                 
-            case TYPE_FILE:
-                printf("IS FILE\n");
-
-                sourceFile = open(currentPath, O_RDONLY, 0);
-                destFile = open(concatString(rootDestination, dptr->d_name), O_CREAT | O_WRONLY , 0755);
-
-                if(sourceFile < 0) {
-                    if(errno == EACCES);
-                    else errorCouldNotReadFile();
-                }
-
-                if(destFile < 0) {
-                    if(errno == EACCES);
-                    else errorCouldNotWriteFile();
-                } 
-
-                while ((size = read(sourceFile, buf, BUFFER_SIZE)) > 0) {
-                    write(destFile, buf, size);
-                }
-
-                printf("file: %s\n", currentPath);
-                close(sourceFile);
-                close(destFile);
-
-                break;
-            
-            default:
-                errorNotAFileOrFolder();
-                break;
+                default:
+                    errorNotAFileOrFolder();
+                    break;
             }
-
             free(currentPath);
         }
-
         free(rootSource);
-     
     }
-
-    
-
 }
 
 int main( int argc, char ** argv ) {
-    /* DIR *dp = NULL;
-    struct dirent *dptr = NULL; */
 
     if (argc == EXPECTED_ARGUMENTS) {
-
         copyDirectory(argv[1], argv[2]);
-
-       /*  dp = opendir(argv[1]);
-
-        if (dp == NULL) {
-            printf("é null");
-        }
-
-        while(NULL != (dptr = readdir(dp)) )
-        {
-            printf("%d", checkIfFileOrDirectory(dptr->d_name));
-            printf(" [%s] \n",dptr->d_name);
-        } */
-               
-       printf("OK \n");
     } else {
         errorInvalidArgumentsNumberTreeCopy();        
     }
